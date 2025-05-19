@@ -2,6 +2,7 @@ package com.example.rubrica;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -9,18 +10,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.rubrica.databinding.ActivityMainBinding;
+import com.example.rubrica.db.DBManager;
+import com.example.rubrica.db.entities.Contatto;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    private static final Contatto contatto1 = new Contatto("Mario", "Bianchi", "3582756395");
-    private static final Contatto contatto2 = new Contatto("Luca", "Rossi", "3683375693");
-    private static final Contatto contatto3 = new Contatto("Alberto", "Neri", "3126745388");
-    private static Contatto[] contatti = {contatto1, contatto2, contatto3};
+//    private static final Contatto contatto1 = new Contatto("Mario", "Bianchi", "3582756395");
+//    private static final Contatto contatto2 = new Contatto("Luca", "Rossi", "3683375693");
+//    private static final Contatto contatto3 = new Contatto("Alberto", "Neri", "3126745388");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,27 +38,39 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        TextView[] textViews = {binding.contatto1, binding.contatto2, binding.contatto3};
-        fillTextViews(textViews);
+        getPageLayout();
+
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        getPageLayout();
+        showLastNumberCalled();
+    }
+
+    public void getPageLayout(){
+        DBManager db = DBManager.getInstance(this);
+
+        ContattoAdapter adapter = new ContattoAdapter(db.getContattoDAO().getAll());
+        binding.myRecycler.setAdapter(adapter);
+        LinearLayoutManager layout = new LinearLayoutManager(this);
+        binding.myRecycler.setLayoutManager(layout);
 
         binding.aggiungiContatto.setOnClickListener(v->{
             Intent intent = new Intent(this, AggiungiContatto.class);
             startActivity(intent);
         });
 
+        showLastNumberCalled();
     }
 
-    private void fillTextViews(TextView[] textViews){
-        int i = 0;
-        for(TextView tw : textViews){
-            tw.setText(contatti[i].getNome()+" "+contatti[i].getCognome());
-            int j = i;
-            tw.setOnClickListener(v->{
-                Intent intent = new Intent(this, DettagliContatto.class);
-                intent.putExtra("contatto", contatti[j]);
-                startActivity(intent);
-            });
-            i++;
+    public void showLastNumberCalled(){
+        String lastNumberCalled = Preferences.leggiNumero(this);
+        TextView lastNumberCalledTextView = binding.lastCall;
+        if(lastNumberCalled != null){
+            lastNumberCalledTextView.setText("Last number called: "+lastNumberCalled);
         }
     }
+
 }

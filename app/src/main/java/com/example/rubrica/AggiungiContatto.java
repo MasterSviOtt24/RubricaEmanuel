@@ -11,6 +11,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.rubrica.databinding.ActivityAggiungiContattoBinding;
+import com.example.rubrica.db.DBManager;
+import com.example.rubrica.db.entities.Contatto;
 
 public class AggiungiContatto extends AppCompatActivity {
 
@@ -28,9 +30,14 @@ public class AggiungiContatto extends AppCompatActivity {
             return insets;
         });
 
+        DBManager db = DBManager.getInstance(getApplicationContext());
+        Contatto vecchioContatto = (Contatto) getIntent().getSerializableExtra("contatto");
+
         if (getIntent().getBooleanExtra("isModifica", false)) {
             binding.title.setText("Modifica contatto");
-            binding.numero.setText(getIntent().getStringExtra("numero"));
+            binding.nome.setText(vecchioContatto.getNome());
+            binding.cognome.setText(vecchioContatto.getCognome());
+            binding.numero.setText((vecchioContatto.getNumero()));
         }
 
         binding.salva.setOnClickListener(v->{
@@ -38,23 +45,37 @@ public class AggiungiContatto extends AppCompatActivity {
             String cognome = binding.cognome.getText().toString();
             String numero = binding.numero.getText().toString();
 
-            if(controllaValiditaNumero(nome,cognome,numero)) aggiungiContatto(nome,cognome,numero);
+            long idContatto = vecchioContatto.getId();
 
+            if(!controllaValiditaNumero(nome,cognome,numero)) {
+                numeroNonValido();
+                return;
+            };
+
+            if (getIntent().getBooleanExtra("isModifica", false)) {
+                Contatto contatto = db.getContattoDAO().getContattoById(idContatto);
+                if(contatto==null) {
+                    Log.e("Contatto", "Contatto null");
+                    return;
+                }
+                contatto.setNome(nome);
+                contatto.setCognome(cognome);
+                contatto.setNumero(numero);
+                Log.w("con2", contatto.toString());
+                db.getContattoDAO().aggiornaContatto(contatto);
+                return;
+            }
+
+            Contatto contatto = new Contatto(nome,cognome,numero);
+            db.getContattoDAO().aggiungiContatto(contatto);
         });
 
     }
 
-    private void aggiungiContatto(String nome,String cognome,String numero){
-        Contatto contatto = new Contatto(nome,cognome,numero);
-        Toast.makeText(this, "Contatto aggiunto!", Toast.LENGTH_LONG).show();
-        Log.e("Contatto: ", contatto.getNome()+" "+contatto.getCognome());
-        // Altro codice per db
-    }
-
     private boolean controllaValiditaNumero(String nome,String cognome,String numero){
-        if(nome.isBlank() || cognome.isBlank() || numero.isBlank()) numeroNonValido();
-        if(!numero.startsWith("3") || numero.length()!=10) numeroNonValido();
-        if (!numero.matches("\\d+")) numeroNonValido();
+        if(nome.isBlank() || cognome.isBlank() || numero.isBlank()) return false;
+        if(!numero.startsWith("3") || numero.length()!=10) return false;
+        if (!numero.matches("\\d+")) return false;
         return true;
     }
     private boolean numeroNonValido(){

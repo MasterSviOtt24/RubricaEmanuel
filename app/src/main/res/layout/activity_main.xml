@@ -19,45 +19,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_marginTop="26dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/myRecycler"
         app:layout_constraintTop_toBottomOf="@id/title"
         android:layout_width="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/lastCall"
+        android:textSize="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/myRecycler"
+        android:layout_margin="15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="vertical"
-        android:paddingHorizontal="16dp"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:textSize="24dp"
-            android:id="@+id/contatto1"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text=""/>
-        <TextView
-            android:textSize="24dp"
-            android:id="@+id/contatto2"
-            app:layout_constraintTop_toBottomOf="@id/contatto1"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text=""/>
-        <TextView
-            android:textSize="24dp"
-            android:id="@+id/contatto3"
-            app:layout_constraintTop_toBottomOf="@id/contatto2"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text=""/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <Button
         android:id="@+id/aggiungiContatto"
@@ -72,5 +48,7 @@
         android:background="@drawable/btn_cerchio"
         android:textColor="#fff"
         />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
