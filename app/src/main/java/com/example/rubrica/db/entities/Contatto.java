@@ -2,11 +2,12 @@ package com.example.rubrica.db.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity
+@Entity(indices = {@Index(value={"numero"}, unique = true)})
 public class Contatto implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
@@ -15,8 +16,8 @@ public class Contatto implements Serializable {
     private String nome;
     @ColumnInfo
     private String cognome;
-    @ColumnInfo
     private String numero;
+
 
     public Contatto(){}
 

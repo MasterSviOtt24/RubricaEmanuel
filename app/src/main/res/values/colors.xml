@@ -3,4 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="btnColor">#2C7FA6</color>
+    <color name="navIcon">#000</color>
+    <color name="btnTextColor">#fff</color>
 </resources>

@@ -16,7 +16,7 @@ public abstract class DBManager extends RoomDatabase {
 
     public static DBManager getInstance(Context c){
         if(instance == null){
-            instance = Room.databaseBuilder(c, DBManager.class, "rubrica_db").allowMainThreadQueries().build();
+            instance = Room.databaseBuilder(c, DBManager.class, "rubrica2_db").allowMainThreadQueries().build();
         }
         return instance;
     }
